@@ -59,7 +59,7 @@ const redirectPage = async (req, res, next) => {
         res.status(200).send({ message: "Protect Route accessed ", redirect: "dashboard" })
         // res.redirect("../dashboard")
     } catch (error) {
-        res.status(500).send({ error: "Failed authentication" })
+        res.status(500).send({ error: "Failed authentication", redirect: "signIn" })
     }
 }
 function tokenGenerator(user_id, secret_key, expireTime) {
