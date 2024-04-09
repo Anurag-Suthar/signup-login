@@ -58,6 +58,8 @@ const signIn = async (signInData: SignIn): Promise<any> => {
         }
 
         const data = response.json();
+
+
         return data;
     } catch (error) {
         console.log("Error in user SignIn", error);
@@ -72,10 +74,10 @@ const fetchToken = async (req: any): Promise<any> => {
                 'auth_token': `${Cookies.get('auth_token')}`
             }
         });
-        const data = await response.json()
-        console.log("Token", data);
+        const { redirect } = await response.json()
 
-        return data;
+
+        return redirect;
     } catch (error) {
         console.log("Error in fetch token");
 
@@ -91,14 +93,23 @@ export default function SignIn() {
         queryFn: fetchToken,
 
     })
-    if (isLoading) {
-        return <div>Loading</div>
-    }
 
+    // React.useEffect(() => {
+    //     if (data & data.redirect == "dashboard") {
+    //         router.push('/dashboard')
+    //     }
+    // }, [data])
+
+    if (data === "dashboard") {
+        router.push('/dashboard')
+    } else {
+        router.push('../')
+    }
 
     const { isPending, mutateAsync } = useMutation({
         mutationFn: signIn,
         onSuccess: async ({ token }) => {
+            console.log("dashboard");
 
             await Cookies.set('auth_token', token, { expires: 7, secure: true });
             router.push('/dashboard')
@@ -119,8 +130,8 @@ export default function SignIn() {
             email: data.get('email') as string,
             password: data.get('password') as string,
         };
+        event.currentTarget.reset();
         try {
-            event.currentTarget.reset();
             await mutateAsync(userData)
 
 
@@ -130,7 +141,9 @@ export default function SignIn() {
         }
     };
 
-
+    if (isLoading) {
+        return <div>Loading</div>
+    }
 
     return (
         <>

@@ -129,8 +129,8 @@ export default function SignUp() {
         }
 
 
-        e.currentTarget.reset();
         try {
+            e.currentTarget.reset();
             await mutateAsync(userData)
 
         } catch (error) {
